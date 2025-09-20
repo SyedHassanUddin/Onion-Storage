@@ -126,7 +126,7 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-3 space-y-6">
               {/* Metrics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <MetricCard
                   title="Temperature"
                   value={temperature.toFixed(1)}
@@ -142,6 +142,13 @@ const Dashboard: React.FC = () => {
                   icon="fas fa-tint"
                   alertLevel={humidity > 90 ? 'critical' : humidity > 80 ? 'warning' : 'safe'}
                   target={targetHumidity}
+                />
+                <MetricCard
+                  title="Shelf Life Est."
+                  value={getEstimatedShelfLife()}
+                  unit=""
+                  icon="fas fa-calendar-alt"
+                  alertLevel={alertLevel}
                 />
               </div>
 
