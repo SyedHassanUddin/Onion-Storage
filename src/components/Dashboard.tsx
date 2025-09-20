@@ -107,11 +107,6 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const getEstimatedShelfLife = () => {
-    if (alertLevel === 'critical') return '2-5 days';
-    if (alertLevel === 'warning') return '1-2 weeks';
-    return '3-6 months';
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
