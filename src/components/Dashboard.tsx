@@ -21,6 +21,7 @@ const Dashboard: React.FC = () => {
   const [temperature, setTemperature] = useState<number>(4.5);
   const [humidity, setHumidity] = useState<number>(85);
   const [fanStatus, setFanStatus] = useState<boolean>(false);
+  const [fanStatus, setFanStatus] = useState<boolean>(false);
   const [data, setData] = useState<DataPoint[]>([]);
   const [alertLevel, setAlertLevel] = useState<'safe' | 'warning' | 'critical'>('safe');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
