@@ -18,9 +18,8 @@ interface DataPoint {
 }
 
 const Dashboard: React.FC = () => {
-  const [temperature, setTemperature] = useState<number>(4.5);
-  const [humidity, setHumidity] = useState<number>(85);
-  const [fanStatus, setFanStatus] = useState<boolean>(false);
+  const [temperature, setTemperature] = useState<number>(28.5);
+  const [humidity, setHumidity] = useState<number>(65);
   const [fanStatus, setFanStatus] = useState<boolean>(false);
   const [data, setData] = useState<DataPoint[]>([]);
   const [alertLevel, setAlertLevel] = useState<'safe' | 'warning' | 'critical'>('safe');
@@ -28,10 +27,10 @@ const Dashboard: React.FC = () => {
   const [isSystemActive, setIsSystemActive] = useState<boolean>(true);
 
   // Simulation parameters
-  const targetTemp = 3.0; // Optimal temperature for onion storage
-  const targetHumidity = 65; // Optimal humidity for onion storage
-  const tempDriftRate = 0.1;
-  const humidityDriftRate = 0.5;
+  const targetTemp = 25.0; // Optimal temperature for storage
+  const targetHumidity = 60; // Optimal humidity for storage
+  const tempDriftRate = 0.2;
+  const humidityDriftRate = 0.8;
 
   // Update current time every second
   useEffect(() => {
@@ -55,10 +54,10 @@ const Dashboard: React.FC = () => {
           newTemp = prev + tempDiff * 0.1 + (Math.random() - 0.5) * tempDriftRate;
         } else {
           // Fan is off - ambient warming
-          newTemp = prev + 0.05 + (Math.random() - 0.5) * tempDriftRate;
+          newTemp = prev + 0.1 + (Math.random() - 0.5) * tempDriftRate;
         }
         
-        return Math.max(0, Math.min(15, newTemp)); // Keep within reasonable bounds
+        return Math.max(20, Math.min(40, newTemp)); // Keep within reasonable bounds
       });
 
       setHumidity(prev => {
@@ -72,7 +71,7 @@ const Dashboard: React.FC = () => {
           newHumidity = prev + (Math.random() - 0.5) * humidityDriftRate;
         }
         
-        return Math.max(20, Math.min(100, newHumidity)); // Keep within reasonable bounds
+        return Math.max(40, Math.min(90, newHumidity)); // Keep within reasonable bounds
       });
 
       // Add data point for charts
@@ -91,9 +90,9 @@ const Dashboard: React.FC = () => {
 
   // Alert system logic
   useEffect(() => {
-    if (temperature > 8 || humidity > 90) {
+    if (temperature > 32 || humidity > 72) {
       setAlertLevel('critical');
-    } else if (temperature > 6 || humidity > 80) {
+    } else if ((temperature > 30 && temperature <= 32) || (humidity > 70 && humidity <= 72)) {
       setAlertLevel('warning');
     } else {
       setAlertLevel('safe');
@@ -106,12 +105,6 @@ const Dashboard: React.FC = () => {
       case 'warning': return 'Monitoring Required';
       case 'critical': return 'Immediate Action Required';
     }
-  };
-
-  const getEstimatedShelfLife = () => {
-    if (alertLevel === 'critical') return '2-5 days';
-    if (alertLevel === 'warning') return '1-2 weeks';
-    return '3-6 months';
   };
 
   return (
@@ -127,13 +120,13 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-3 space-y-6">
               {/* Metrics Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <MetricCard
                   title="Temperature"
                   value={temperature.toFixed(1)}
                   unit="°C"
                   icon="fas fa-thermometer-half"
-                  alertLevel={temperature > 8 ? 'critical' : temperature > 6 ? 'warning' : 'safe'}
+                  alertLevel={temperature > 32 ? 'critical' : (temperature > 30 && temperature <= 32) ? 'warning' : 'safe'}
                   target={targetTemp}
                 />
                 <MetricCard
@@ -141,15 +134,8 @@ const Dashboard: React.FC = () => {
                   value={humidity.toFixed(1)}
                   unit="%"
                   icon="fas fa-tint"
-                  alertLevel={humidity > 90 ? 'critical' : humidity > 80 ? 'warning' : 'safe'}
+                  alertLevel={humidity > 72 ? 'critical' : (humidity > 70 && humidity <= 72) ? 'warning' : 'safe'}
                   target={targetHumidity}
-                />
-                <MetricCard
-                  title="Shelf Life Est."
-                  value={getEstimatedShelfLife()}
-                  unit=""
-                  icon="fas fa-calendar-alt"
-                  alertLevel={alertLevel}
                 />
               </div>
 
@@ -197,8 +183,8 @@ const Dashboard: React.FC = () => {
                     <button
                       className="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30"
                       onClick={() => {
-                        if (temperature > 6) setFanStatus(true);
-                        else if (temperature < 4) setFanStatus(false);
+                        if (temperature > 30) setFanStatus(true);
+                        else if (temperature < 28) setFanStatus(false);
                       }}
                     >
                       Enable
