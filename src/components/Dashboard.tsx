@@ -21,6 +21,7 @@ const Dashboard: React.FC = () => {
   const [temperature, setTemperature] = useState<number>(4.5);
   const [humidity, setHumidity] = useState<number>(85);
   const [fanStatus, setFanStatus] = useState<boolean>(false);
+  const [fanStatus, setFanStatus] = useState<boolean>(false);
   const [data, setData] = useState<DataPoint[]>([]);
   const [alertLevel, setAlertLevel] = useState<'safe' | 'warning' | 'critical'>('safe');
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
@@ -107,6 +108,11 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const getEstimatedShelfLife = () => {
+    if (alertLevel === 'critical') return '2-5 days';
+    if (alertLevel === 'warning') return '1-2 weeks';
+    return '3-6 months';
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
